@@ -34,7 +34,7 @@ public class User {
     private UserRole status;
 
     @Column(nullable = false)
-    private Boolean is_blocked;
+    private Boolean isBlocked;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Listing> listings = new ArrayList<>();
