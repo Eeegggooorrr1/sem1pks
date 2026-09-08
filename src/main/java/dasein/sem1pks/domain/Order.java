@@ -19,12 +19,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "listing_id", nullable = false,
             foreignKey = @ForeignKey(name = "fk_orders_listing"))
     private Listing listing;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "buyer_id", nullable = false,
             foreignKey = @ForeignKey(name = "fk_orders_buyer"))
     private User buyer;
@@ -33,8 +33,15 @@ public class Order {
     @Column(nullable = false, length = 20)
     private OrderStatus status = OrderStatus.PENDING;
 
-    @Column(name = "order_date")
+    @Column(name = "order_date", nullable = false, updatable = false)
     private LocalDateTime orderDate;
+
+    @PrePersist
+    private void setOrderDate() {
+        if (orderDate == null) {
+            orderDate = LocalDateTime.now();
+        }
+    }
 
 }
 
