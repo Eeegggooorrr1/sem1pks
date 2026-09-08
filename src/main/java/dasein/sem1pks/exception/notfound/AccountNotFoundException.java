@@ -5,4 +5,8 @@ public class AccountNotFoundException extends NotFoundException {
         super("ACCOUNT_NOT_FOUND", "Аккаунт с почтой " + email + " не найден");
     }
 
+    public AccountNotFoundException(Long id) {
+        super("ACCOUNT_NOT_FOUND", "Аккаунт с id " + id + " не найден");
+    }
+
 }
