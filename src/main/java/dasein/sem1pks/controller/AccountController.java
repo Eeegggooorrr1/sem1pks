@@ -29,7 +29,7 @@ public class AccountController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody AccountRegisterRequest request) {
         AuthResponse authResponse = accountService.createAccount(
                 request.username(),

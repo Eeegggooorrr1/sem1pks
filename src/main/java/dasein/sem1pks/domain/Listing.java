@@ -47,6 +47,10 @@ public class Listing {
             foreignKey = @ForeignKey(name = "fk_listings_user"))
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ListingCategory category = ListingCategory.OTHER;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
