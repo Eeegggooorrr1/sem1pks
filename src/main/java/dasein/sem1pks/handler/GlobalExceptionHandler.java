@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -35,21 +37,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+        Map<String, List<String>> errors = new LinkedHashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            String fieldName = error instanceof FieldError fieldError ? fieldError.getField() : "_global";
+            errors.computeIfAbsent(fieldName, ignored -> new ArrayList<>()).add(error.getDefaultMessage());
         });
         return buildErrorResponse("VALIDATION_ERROR", "Ошибка валидации данных", HttpStatus.BAD_REQUEST, errors);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
+        Map<String, List<String>> errors = new LinkedHashMap<>();
         ex.getConstraintViolations().forEach(violation -> {
             String field = violation.getPropertyPath().toString();
-            errors.put(field, violation.getMessage());
+            errors.computeIfAbsent(field, ignored -> new ArrayList<>()).add(violation.getMessage());
         });
         return buildErrorResponse("VALIDATION_ERROR", "Ошибка валидации параметров", HttpStatus.BAD_REQUEST, errors);
     }
@@ -88,13 +89,9 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(code, message, status, null);
     }
 
-    private ResponseEntity<ErrorResponse> buildErrorResponse(String code, String message, HttpStatus status, Map<String, String> details) {
-        ErrorResponse error = ErrorResponse.builder()
-                .errorCode(code)
-                .message(message)
-                .status(status.value())
-                .details(details)
-                .build();
+    private ResponseEntity<ErrorResponse> buildErrorResponse(String code, String message, HttpStatus status,
+                                                              Map<String, List<String>> details) {
+        ErrorResponse error = new ErrorResponse(code, message, status.value(), details);
         return ResponseEntity.status(status).body(error);
     }
 }
