@@ -15,5 +15,11 @@ spring:
       hibernate:
         format_sql: true
 
+app:
+  jwt:
+    access-secret: ${APP_JWT_ACCESS_SECRET}
+    access-expiration-milliseconds: ${APP_JWT_ACCESS_EXPIRATION_MILLISECONDS}
+
+
 server:
   port: 8080
