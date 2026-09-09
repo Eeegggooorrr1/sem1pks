@@ -63,6 +63,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/listings")
                         .permitAll()
 
+                        .requestMatchers("/api/orders/**").authenticated()
+
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> httpBasic.disable())
