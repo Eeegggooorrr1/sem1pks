@@ -57,7 +57,7 @@ public class ListingService {
             throw new ListingAccessDeniedException(listingId);
         }
         if (listing.getStatus() != ListingStatus.ACTIVE) {
-            throw new ListingAccessDeniedException(listingId);
+            throw new ListingStateConflictException();
         }
         listing.setStatus(ListingStatus.SOLD);
 
