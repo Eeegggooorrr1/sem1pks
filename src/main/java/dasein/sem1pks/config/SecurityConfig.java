@@ -2,6 +2,7 @@ package dasein.sem1pks.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,10 +30,39 @@ public class SecurityConfig {
                                                    RestAccessDeniedHandler accessDeniedHandler) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/api/users/register",
+                                "/api/users/login"
+                        ).permitAll()
+
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PATCH, "/api/listings/*/closed/admin")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/listings")
+                        .authenticated()
+
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/listings/*/sold",
+                                "/api/listings/*/active",
+                                "/api/listings/*/closed"
+                        )
+                        .authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "/api/listings/my")
+                        .authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "/api/listings")
+                        .permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> httpBasic.disable())
