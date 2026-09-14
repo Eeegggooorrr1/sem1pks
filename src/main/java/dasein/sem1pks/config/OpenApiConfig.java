@@ -15,9 +15,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Marketplace API")
+                        .title("API")
                         .version("1.0")
-                        .description("REST API for marketplace application"))
+                        .description("невыносимая легкость бытия"))
                 .components(new Components()
                         .addSecuritySchemes(
                                 "bearerAuth",
