@@ -16,9 +16,11 @@ import java.util.Optional;
 public interface JpaOrderRepository
         extends JpaRepository<Order, Long>, OrderRepository {
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     Optional<Order> findById(Long id);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     @Query("""
             SELECT o
@@ -36,6 +38,7 @@ public interface JpaOrderRepository
             """)
     List<Order> findIncomingOrders(@Param("userId") Long userId);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     @Query("""
             SELECT o
