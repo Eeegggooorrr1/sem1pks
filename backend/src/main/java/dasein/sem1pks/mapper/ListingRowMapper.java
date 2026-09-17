@@ -16,6 +16,7 @@ public class ListingRowMapper {
         Listing listing = new Listing();
 
         listing.setId(resultSet.getLong("id"));
+        listing.setVersion(resultSet.getLong("version"));
         listing.setTitle(resultSet.getString("title"));
         listing.setDescription(resultSet.getString("description"));
         listing.setPrice(resultSet.getBigDecimal("price"));
@@ -31,6 +32,9 @@ public class ListingRowMapper {
             listing.setCreatedAt(createdAt.toLocalDateTime());
         }
 
+        dasein.sem1pks.domain.User user = new dasein.sem1pks.domain.User();
+        user.setId(resultSet.getLong("user_id"));
+        listing.setUser(user);
         return listing;
     }
 }

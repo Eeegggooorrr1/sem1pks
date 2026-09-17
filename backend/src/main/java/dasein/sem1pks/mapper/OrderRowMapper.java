@@ -16,6 +16,7 @@ public class OrderRowMapper {
         Order order = new Order();
 
         order.setId(resultSet.getLong("id"));
+        order.setVersion(resultSet.getLong("version"));
 
         order.setStatus(
                 OrderStatus.valueOf(resultSet.getString("status"))
@@ -26,6 +27,15 @@ public class OrderRowMapper {
             order.setOrderDate(orderDate.toLocalDateTime());
         }
 
+        dasein.sem1pks.domain.User buyer = new dasein.sem1pks.domain.User();
+        buyer.setId(resultSet.getLong("buyer_id"));
+        dasein.sem1pks.domain.User seller = new dasein.sem1pks.domain.User();
+        seller.setId(resultSet.getLong("seller_id"));
+        dasein.sem1pks.domain.Listing listing = new dasein.sem1pks.domain.Listing();
+        listing.setId(resultSet.getLong("listing_id"));
+        listing.setUser(seller);
+        order.setBuyer(buyer);
+        order.setListing(listing);
         return order;
     }
 }
