@@ -4,7 +4,6 @@ import dasein.sem1pks.domain.User;
 import dasein.sem1pks.dto.response.AccountResponse;
 import dasein.sem1pks.dto.response.AuthResponse;
 import dasein.sem1pks.exception.conflict.AccountAlreadyExistsException;
-import dasein.sem1pks.exception.notfound.AccountNotFoundException;
 import dasein.sem1pks.exception.unauthorized.InvalidCredentialsException;
 import dasein.sem1pks.repository.UserRepository;
 import dasein.sem1pks.util.EmailNormalizer;
@@ -57,7 +56,14 @@ public class AccountService {
         user.setPasswordHash(passwordEncoder.encode(password));
         user.setUsername(username.trim());
 
-        User savedUser = userRepository.save(user);
+        User savedUser;
+        try {
+            savedUser = userRepository.save(user);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            if (userRepository.existsByEmail(normalizedEmail))
+                throw new AccountAlreadyExistsException(normalizedEmail);
+            throw e;
+        }
 
         String token = jwtService.generateToken(
                 savedUser.getId(),
