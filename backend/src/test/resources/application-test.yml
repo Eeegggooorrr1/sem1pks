@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
+app:
+  jwt:
+    access-secret: ${TEST_JWT_SECRET}
+    access-expiration-milliseconds: ${TEST_JWT_EXPIRATION}
+  bootstrap:
+    enabled: ${TEST_BOOTSTRAP_ENABLED}
+    admin-email: ${TEST_ADMIN_EMAIL}
+    admin-password: ${TEST_ADMIN_PASSWORD}
+    demo-enabled: ${TEST_DEMO_ENABLED}
+    demo-password: ${TEST_DEMO_PASSWORD}
