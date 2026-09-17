@@ -25,6 +25,10 @@ public class Listing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    @Column(nullable = false)
+    private long version;
+
     @NotBlank
     @Size(max = 200)
     @Column(nullable = false, length = 200)

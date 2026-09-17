@@ -73,6 +73,16 @@ public class GlobalExceptionHandler {
         return buildErrorResponse("MISSING_PARAMETER", message, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(org.springframework.dao.OptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleConcurrentUpdate(Exception ex) {
+        return buildErrorResponse("CONCURRENT_UPDATE", "The resource was modified; reload and try again", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(Exception ex) {
+        return buildErrorResponse("METHOD_NOT_ALLOWED", "HTTP method is not supported", HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
         log.error("Ошибка доступа к данным", ex);
