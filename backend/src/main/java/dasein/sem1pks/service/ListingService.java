@@ -61,7 +61,7 @@ public class ListingService {
         }
         listing.setStatus(ListingStatus.SOLD);
 
-        return toDto(listing);
+        return toDto(listingRepository.save(listing));
     }
 
     @Transactional
@@ -76,7 +76,7 @@ public class ListingService {
         }
         listing.setStatus(ListingStatus.ACTIVE);
 
-        return toDto(listing);
+        return toDto(listingRepository.save(listing));
     }
 
     @Transactional
@@ -88,12 +88,14 @@ public class ListingService {
             throw new ListingAccessDeniedException(listingId);
         }
         listing.setStatus(ListingStatus.CLOSED);
+        listingRepository.save(listing);
     }
 
     @Transactional
     public void markAsClosedAsAdmin(Long listingId) {
         Listing listing = getListing(listingId);
         listing.setStatus(ListingStatus.CLOSED);
+        listingRepository.save(listing);
     }
 
     @Transactional(readOnly = true)
@@ -134,7 +136,7 @@ public class ListingService {
         if (prefix == null || prefix.isBlank()) {
             return null;
         }
-        return prefix.trim();
+        return prefix.trim().replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
 
     private String toProperty(ListingSortBy sortBy) {

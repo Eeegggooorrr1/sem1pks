@@ -10,10 +10,15 @@ public record AccountRegisterRequest(
     String username,
 
     @NotBlank(message = "Email обязателен")
+    @Size(max = 254)
     @Email(message = "Некорректный формат email")
     String email,
 
     @NotBlank(message = "Пароль обязателен")
     @Size(min = 8, max = 72, message = "Пароль должен быть от 8 до 72 символов")
     String password
-) {}
+) {
+    public AccountRegisterRequest {
+        username = username == null ? null : username.trim();
+    }
+}

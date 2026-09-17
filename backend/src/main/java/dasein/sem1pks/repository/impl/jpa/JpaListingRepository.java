@@ -30,7 +30,7 @@ public interface JpaListingRepository
             select listing
             from Listing listing
             where listing.status <> :closedStatus
-              and (:prefix is null or lower(listing.title) like lower(concat(:prefix, '%')))
+              and (cast(:prefix as String) is null or lower(listing.title) like lower(concat(cast(:prefix as String), '%')) escape '!')
               and (:category is null or listing.category = :category)
             order by case
                 when listing.status = :soldStatus then 1

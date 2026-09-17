@@ -73,7 +73,7 @@ public class OrderService {
 
         order.setStatus(OrderStatus.CONFIRMED);
 
-        return toDto(order);
+        return toDto(orderRepository.save(order));
     }
 
     @Transactional
@@ -91,7 +91,7 @@ public class OrderService {
 
         order.setStatus(OrderStatus.COMPLETED);
 
-        return toDto(order);
+        return toDto(orderRepository.save(order));
     }
 
     @Transactional
@@ -108,6 +108,7 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
