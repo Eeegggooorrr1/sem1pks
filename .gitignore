@@ -33,3 +33,4 @@ build/
 
 .env
 .env.test
+/exports/domain-export.zip
