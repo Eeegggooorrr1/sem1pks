@@ -21,3 +21,28 @@ app:
     demo-password: ${BOOTSTRAP_DEMO_PASSWORD}
 server:
   port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db
+logging:
+  level:
+    root: INFO
+    dasein.sem1pks: INFO
+---
+spring:
+  config:
+    activate:
+      on-profile: jdbc
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
+      - org.springframework.boot.data.jpa.autoconfigure.DataJpaRepositoriesAutoConfiguration
