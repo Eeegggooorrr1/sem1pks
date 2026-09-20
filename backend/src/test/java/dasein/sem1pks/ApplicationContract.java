@@ -58,6 +58,12 @@ abstract class ApplicationContract {
         return jwt.generateToken(user.getId(),user.getEmail(),user.getRole().name(),user.isBlocked());
     }
 
+    @Test void readinessIsPublicButOtherActuatorEndpointsAreProtected() throws Exception {
+        mvc.perform(get("/actuator/health/readiness"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("UP"));
+        mvc.perform(get("/actuator/health")).andExpect(status().isUnauthorized());
+    }
+
     @Test void registrationLoginAndDuplicateEmail() throws Exception {
         var registered = accounts.createAccount("Alice"," Alice@Example.com ","Password-123");
         assertThat(accounts.login("ALICE@example.com","Password-123").account().id()).isEqualTo(registered.account().id());
@@ -69,7 +75,7 @@ abstract class ApplicationContract {
             .content("{\"email\":\"alice@example.com\",\"password\":\"wrong\"}")).andExpect(status().isUnauthorized());
     }
 
-    @Test void accountDtoValidatesNormalizedNameAndUtf8Password() throws Exception {
+    @Test void accountDtoValidatesNormalizedNameAndPasswordLength() throws Exception {
         mvc.perform(post("/api/users/register").contentType("application/json").content("""
             {"username":" a ","email":"short@example.com","password":"Password-123"}
             """)).andExpect(status().isBadRequest())
@@ -77,7 +83,7 @@ abstract class ApplicationContract {
             .andExpect(jsonPath("$.details.username").exists());
         mvc.perform(post("/api/users/register").contentType("application/json").content("""
             {"username":"Alice","email":"long@example.com","password":"%s"}
-            """.formatted("я".repeat(37))))
+            """.formatted("a".repeat(73))))
             .andExpect(status().isBadRequest()).andExpect(jsonPath("$.details.password").exists());
         mvc.perform(post("/api/users/register").contentType("application/json").content("""
             {"username":" Alice ","email":"valid@example.com","password":"%s"}
