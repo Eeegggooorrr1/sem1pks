@@ -1,21 +1,78 @@
+name: sem1pks
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: sem1pks
-    restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:?Set POSTGRES_PORT in .env}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      target: runtime
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      SPRING_PROFILES_ACTIVE: ${REPOSITORY_PROFILE:?Set REPOSITORY_PROFILE in .env}
+      APP_JWT_ACCESS_SECRET: ${APP_JWT_ACCESS_SECRET:?Set APP_JWT_ACCESS_SECRET in .env}
+      APP_JWT_ACCESS_EXPIRATION_MILLISECONDS: ${APP_JWT_ACCESS_EXPIRATION_MILLISECONDS:?Set JWT expiration in .env}
+      BOOTSTRAP_ENABLED: ${BOOTSTRAP_ENABLED:?Set BOOTSTRAP_ENABLED in .env}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:?Set BOOTSTRAP_ADMIN_EMAIL in .env}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:?Set BOOTSTRAP_ADMIN_PASSWORD in .env}
+      BOOTSTRAP_DEMO_ENABLED: ${BOOTSTRAP_DEMO_ENABLED:?Set BOOTSTRAP_DEMO_ENABLED in .env}
+      BOOTSTRAP_DEMO_PASSWORD: ${BOOTSTRAP_DEMO_PASSWORD:?Set BOOTSTRAP_DEMO_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:?Set BACKEND_PORT in .env}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/actuator/health/readiness"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 30
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      target: runtime
+    profiles: ["cli"]
+    environment:
+      API_URL: http://backend:8080
+      EXPORT_DIR: /exports
+    volumes:
+      - ./exports:/exports
+    stdin_open: true
+    tty: true
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  frontend-smoke:
+    build:
+      context: ./frontend
+      target: test
+    profiles: ["smoke"]
+    environment:
+      SMOKE_API_URL: http://backend:8080
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:?Set BOOTSTRAP_ADMIN_EMAIL in .env}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:?Set BOOTSTRAP_ADMIN_PASSWORD in .env}
+    command: ["mvn", "-B", "-Dtest=ApiSmokeIT", "test"]
+    depends_on:
+      backend:
+        condition: service_healthy
 
 volumes:
   postgres_data:

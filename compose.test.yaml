@@ -1,0 +1,39 @@
+name: sem1pks-tests
+services:
+  test-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${TEST_DB_NAME:?Set TEST_DB_NAME in .env.test}
+      POSTGRES_USER: ${TEST_DB_USER:?Set TEST_DB_USER in .env.test}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:?Set TEST_DB_PASSWORD in .env.test}
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  backend-tests:
+    build:
+      context: ./backend
+      target: test
+    environment:
+      TEST_DB_URL: jdbc:postgresql://test-db:5432/${TEST_DB_NAME:?Set TEST_DB_NAME in .env.test}
+      TEST_DB_USER: ${TEST_DB_USER:?Set TEST_DB_USER in .env.test}
+      TEST_DB_PASSWORD: ${TEST_DB_PASSWORD:?Set TEST_DB_PASSWORD in .env.test}
+      TEST_JWT_SECRET: ${TEST_JWT_SECRET:?Set TEST_JWT_SECRET in .env.test}
+      TEST_JWT_EXPIRATION: ${TEST_JWT_EXPIRATION:?Set TEST_JWT_EXPIRATION in .env.test}
+      TEST_BOOTSTRAP_ENABLED: ${TEST_BOOTSTRAP_ENABLED:?Set TEST_BOOTSTRAP_ENABLED in .env.test}
+      TEST_ADMIN_EMAIL: ${TEST_ADMIN_EMAIL:?Set TEST_ADMIN_EMAIL in .env.test}
+      TEST_ADMIN_PASSWORD: ${TEST_ADMIN_PASSWORD:?Set TEST_ADMIN_PASSWORD in .env.test}
+      TEST_DEMO_ENABLED: ${TEST_DEMO_ENABLED:?Set TEST_DEMO_ENABLED in .env.test}
+      TEST_DEMO_PASSWORD: ${TEST_DEMO_PASSWORD:?Set TEST_DEMO_PASSWORD in .env.test}
+    depends_on:
+      test-db:
+        condition: service_healthy
+
+  frontend-tests:
+    build:
+      context: ./frontend
+      target: test
