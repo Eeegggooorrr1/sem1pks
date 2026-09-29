@@ -1,7 +1,9 @@
 package dasein.sem1pks.mapper;
 
+import dasein.sem1pks.domain.Listing;
 import dasein.sem1pks.domain.Order;
 import dasein.sem1pks.domain.OrderStatus;
+import dasein.sem1pks.domain.User;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -27,11 +29,11 @@ public class OrderRowMapper {
             order.setOrderDate(orderDate.toLocalDateTime());
         }
 
-        dasein.sem1pks.domain.User buyer = new dasein.sem1pks.domain.User();
+        User buyer = new User();
         buyer.setId(resultSet.getLong("buyer_id"));
-        dasein.sem1pks.domain.User seller = new dasein.sem1pks.domain.User();
+        User seller = new User();
         seller.setId(resultSet.getLong("seller_id"));
-        dasein.sem1pks.domain.Listing listing = new dasein.sem1pks.domain.Listing();
+        Listing listing = new Listing();
         listing.setId(resultSet.getLong("listing_id"));
         listing.setUser(seller);
         order.setBuyer(buyer);

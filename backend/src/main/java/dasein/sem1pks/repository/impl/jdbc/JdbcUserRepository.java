@@ -53,7 +53,8 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        return Boolean.TRUE.equals(jdbc.queryForObject(
-                "SELECT EXISTS(SELECT 1 FROM users WHERE email=?)", Boolean.class, email));
+        Integer cnt = jdbc.queryForObject(
+                "SELECT COUNT(*) FROM users WHERE email=?", Integer.class, email);
+        return cnt != null && cnt > 0;
     }
 }

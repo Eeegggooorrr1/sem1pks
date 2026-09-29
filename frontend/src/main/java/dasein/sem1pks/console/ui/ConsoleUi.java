@@ -42,7 +42,7 @@ public final class ConsoleUi {
     }
 
     public void run() {
-        System.out.println("Сервис объявлений — " + api.baseUrl());
+        System.out.println("Сервис объявлений - " + api.baseUrl());
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
@@ -69,9 +69,9 @@ public final class ConsoleUi {
             case "1" -> show(api.accounts().login(new LoginRequest(read("Email: "), password())));
             case "2" -> show(api.accounts().register(new RegisterRequest(read("Имя: "), read("Email: "), password())));
             case "3" -> {
-                String prefix = read("Начало названия (Enter — любое): ");
+                String prefix = read("Начало названия (Enter - любое): ");
                 System.out.print(CATEGORIES);
-                String category = upper(read("Категория (Enter — любая): "));
+                String category = upper(read("Категория (Enter - любая): "));
                 String sort = withDefault(upper(read("PRICE / CREATED_AT [CREATED_AT]: ")), "CREATED_AT");
                 String direction = withDefault(upper(read("ASC / DESC [DESC]: ")), "DESC");
                 show(api.listings().search(prefix, category, sort, direction));

@@ -19,7 +19,7 @@ public final class HttpTransport {
     private final URI baseUri;
     private final TokenStore tokens;
     private final HttpClient http;
-    private final ObjectMapper json = JsonMapper.builder().build();
+    private final ObjectMapper json = new JsonMapper();
 
     public HttpTransport(String baseUrl, TokenStore tokens) {
         this.baseUri = URI.create(baseUrl.replaceAll("/+$", ""));
@@ -79,7 +79,6 @@ public final class HttpTransport {
                 message += " " + error.get("details");
             }
         } catch (IOException ignored) {
-            // A non-JSON error response still produces a useful HTTP status.
         }
         return message;
     }

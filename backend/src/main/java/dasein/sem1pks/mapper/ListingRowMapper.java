@@ -3,6 +3,7 @@ package dasein.sem1pks.mapper;
 import dasein.sem1pks.domain.Listing;
 import dasein.sem1pks.domain.ListingCategory;
 import dasein.sem1pks.domain.ListingStatus;
+import dasein.sem1pks.domain.User;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class ListingRowMapper {
             listing.setCreatedAt(createdAt.toLocalDateTime());
         }
 
-        dasein.sem1pks.domain.User user = new dasein.sem1pks.domain.User();
+        User user = new User();
         user.setId(resultSet.getLong("user_id"));
         listing.setUser(user);
         return listing;

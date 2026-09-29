@@ -3,6 +3,7 @@ package dasein.sem1pks.repository.impl.jpa;
 import dasein.sem1pks.domain.Order;
 import dasein.sem1pks.repository.OrderRepository;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,11 +17,11 @@ import java.util.Optional;
 public interface JpaOrderRepository
         extends JpaRepository<Order, Long>, OrderRepository {
 
-    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
+    @EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     Optional<Order> findById(Long id);
 
-    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
+    @EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     @Query("""
             SELECT o
@@ -38,7 +39,7 @@ public interface JpaOrderRepository
             """)
     List<Order> findIncomingOrders(@Param("userId") Long userId);
 
-    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
+    @EntityGraph(attributePaths = {"listing", "listing.user", "buyer"})
     @Override
     @Query("""
             SELECT o
