@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="VBox" alignment="CENTER" spacing="14"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    <Label text="Добро пожаловать" styleClass="auth-title"/>
+    <Label text="Войдите, чтобы создавать объявления и работать с заказами" styleClass="muted-text"/>
+    <TabPane maxWidth="430" tabClosingPolicy="UNAVAILABLE" styleClass="auth-card">
+        <tabs>
+            <Tab text="Вход">
+                <content>
+                    <VBox spacing="12">
+                        <padding>
+                            <Insets top="22" right="22" bottom="22" left="22"/>
+                        </padding>
+                        <TextField fx:id="loginEmail" promptText="Email"/>
+                        <PasswordField fx:id="loginPassword" promptText="Пароль" onAction="#login"/>
+                        <Button fx:id="loginButton" text="Войти" maxWidth="Infinity"
+                                styleClass="primary-button" onAction="#login"/>
+                    </VBox>
+                </content>
+            </Tab>
+            <Tab text="Регистрация">
+                <content>
+                    <VBox spacing="12">
+                        <padding>
+                            <Insets top="22" right="22" bottom="22" left="22"/>
+                        </padding>
+                        <TextField fx:id="registerUsername" promptText="Имя"/>
+                        <TextField fx:id="registerEmail" promptText="Email"/>
+                        <PasswordField fx:id="registerPassword" promptText="Пароль (минимум 8 символов)"
+                                       onAction="#register"/>
+                        <Button fx:id="registerButton" text="Зарегистрироваться" maxWidth="Infinity"
+                                styleClass="primary-button" onAction="#register"/>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+    <Button text="Посмотреть объявления без входа" styleClass="link-button"
+            onAction="#openGuestMode"/>
+</fx:root>

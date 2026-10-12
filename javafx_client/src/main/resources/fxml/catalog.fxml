@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root type="BorderPane"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="18" right="18" bottom="18" left="18"/>
+    </padding>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <padding>
+                <Insets bottom="14"/>
+            </padding>
+            <TextField fx:id="prefix" promptText="Начало названия" prefWidth="230" onAction="#load"/>
+            <ComboBox fx:id="category" prefWidth="170"/>
+            <ComboBox fx:id="sort" prefWidth="170"/>
+            <Button text="Найти" styleClass="primary-button" onAction="#load"/>
+        </HBox>
+    </top>
+    <center>
+        <ListView fx:id="listings" styleClass="content-list">
+            <placeholder>
+                <Label text="Объявления не найдены"/>
+            </placeholder>
+        </ListView>
+    </center>
+</fx:root>

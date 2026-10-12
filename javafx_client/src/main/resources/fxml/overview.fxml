@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="VBox" spacing="18"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <Label text="Профиль" styleClass="section-title"/>
+    <VBox spacing="7" styleClass="content-card">
+        <padding>
+            <Insets top="16" right="16" bottom="16" left="16"/>
+        </padding>
+        <Label fx:id="username"/>
+        <Label fx:id="email"/>
+        <Label fx:id="role"/>
+    </VBox>
+
+    <Label text="Статистика сервиса" styleClass="section-title"/>
+    <TableView fx:id="statisticsTable" prefHeight="245" styleClass="statistics-table">
+        <columns>
+            <TableColumn fx:id="metricColumn" text="Показатель" prefWidth="330"/>
+            <TableColumn fx:id="valueColumn" text="Значение" prefWidth="220"/>
+        </columns>
+        <placeholder>
+            <Label text="Статистика загружается"/>
+        </placeholder>
+    </TableView>
+    <Button fx:id="refreshButton" text="Обновить статистику" styleClass="secondary-button"
+            onAction="#loadStatistics"/>
+
+    <VBox fx:id="adminBox" spacing="9" styleClass="content-card">
+        <padding>
+            <Insets top="16" right="16" bottom="16" left="16"/>
+        </padding>
+        <Label text="Действия администратора" styleClass="card-title"/>
+        <Label text="Экспорт содержит актуальные данные сервиса в ZIP-архиве."/>
+        <Button fx:id="exportButton" text="Скачать архив данных" styleClass="primary-button"
+                onAction="#export"/>
+    </VBox>
+</fx:root>
