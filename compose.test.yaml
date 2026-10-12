@@ -35,5 +35,5 @@ services:
 
   frontend-tests:
     build:
-      context: ./frontend
+      context: console_client
       target: test

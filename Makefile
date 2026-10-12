@@ -1,20 +1,44 @@
 .DEFAULT_GOAL := help
 COMPOSE = docker compose --env-file .env -f compose.yaml
 TEST_COMPOSE = docker compose --env-file .env.test -f compose.test.yaml
+-include .env
+export JAVA_HOME
 
-.PHONY: help build up start cli stop down logs ps test test-backend test-frontend test-down smoke
+.PHONY: help build build-backend build-javafx build-console up start javafx console cli stop down logs ps test test-backend test-frontend test-down smoke
 
-build:
-	$(COMPOSE) --profile cli build backend frontend
+help:
+	@echo "make start         - backend + JavaFX client"
+	@echo "make build         - build backend and JavaFX client"
+	@echo "make up            - PostgreSQL + backend"
+	@echo "make console       - backend + console client"
+	@echo "make build-console - build console client image"
+	@echo "make down          - stop and remove containers"
+
+build: build-backend build-javafx
+
+build-backend:
+	$(COMPOSE) build backend
+
+build-javafx:
+	@if [ -z "$(JAVA_HOME)" ]; then echo "Set JAVA_HOME to JDK 17 or newer in .env"; exit 1; fi
+	cd javafx_client && ../backend/mvnw -q -DskipTests package
+
+build-console:
+	$(COMPOSE) --profile cli build frontend
 
 up:
 	$(COMPOSE) up --build -d --wait backend
 
-start: up
+start: javafx
+
+javafx: up
+	@if [ -z "$(JAVA_HOME)" ]; then echo "Set JAVA_HOME to JDK 17 or newer in .env"; exit 1; fi
+	cd javafx_client && API_URL=http://localhost:$(BACKEND_PORT) EXPORT_DIR=../exports ../backend/mvnw -q javafx:run
+
+console: up
 	$(COMPOSE) run --build --rm frontend
 
-cli:
-	$(COMPOSE) run --build --rm frontend
+cli: console
 
 stop:
 	$(COMPOSE) stop

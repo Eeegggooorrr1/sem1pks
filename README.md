@@ -1,11 +1,13 @@
 # Сервис объявлений
 
 Небольшой сервис объявлений с регистрацией, поиском, заказами и ролями пользователей.
-Backend написан на Spring Boot, консольный клиент - на Java 17. Данные в PostgreSQL.
+Backend написан на Spring Boot, доступны консольный и JavaFX-клиенты на Java 17. Данные в PostgreSQL.
+
 
 ## Запуск
 
-Нужен Docker и команда `make`.
+Нужны Docker и команда `make`. Для JavaFX-клиента дополнительно требуется JDK 17 или новее,
+путь к нему задаётся через `JAVA_HOME` в `.env`.
 
 1. Скопируйте пример настроек в корневой каталог:
 
@@ -46,10 +48,14 @@ make start
 | `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` | Учетная запись администратора      |
 | `BOOTSTRAP_DEMO_ENABLED` | Включить демоданные                |
 | `BOOTSTRAP_DEMO_PASSWORD` | Пароль демопользователей           |
+| `JAVA_HOME` | Путь к JDK для локального запуска JavaFX |
 
 Если порт занят, измените `BACKEND_PORT` или `POSTGRES_PORT`. После изменения выполните
-`make up`. Чтобы запустить JPA вместо JDBC, укажите в `.env`:
+`make up`. Основной запуск использует JPA; в `.env` должно быть:
 
+```dotenv
+REPOSITORY_PROFILE=jpa
+```
 
 Внутренние адреса PostgreSQL и backend Compose задает сам, поэтому их не нужно добавлять в `.env`.
 Для запуска клиента отдельно задайте `API_URL` и `EXPORT_DIR` в окружении процесса.
@@ -58,10 +64,11 @@ make start
 
 | Команда | Действие |
 | --- | --- |
-| `make start` | Запустить backend и открыть клиент |
+| `make start` / `make javafx` | Запустить backend и открыть JavaFX-клиент |
+| `make console` / `make cli` | Запустить backend и открыть консольный клиент |
 | `make up` | Запустить PostgreSQL и backend |
-| `make cli` | Открыть клиент |
-| `make build` | Собрать образы |
+| `make build` | Собрать backend и JavaFX-клиент |
+| `make build-console` | Собрать образ консольного клиента |
 | `make logs` | Смотреть логи backend |
 | `make ps` | Посмотреть состояние контейнеров |
 | `make stop` | Остановить контейнеры |

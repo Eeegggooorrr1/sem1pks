@@ -46,7 +46,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: console_client
       target: runtime
     profiles: ["cli"]
     environment:
@@ -62,7 +62,7 @@ services:
 
   frontend-smoke:
     build:
-      context: ./frontend
+      context: console_client
       target: test
     profiles: ["smoke"]
     environment:
