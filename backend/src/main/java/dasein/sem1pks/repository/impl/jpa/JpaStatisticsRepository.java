@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @Profile("jpa")
 public interface JpaStatisticsRepository extends Repository<User, Long>, StatisticsRepository {
@@ -19,4 +21,12 @@ public interface JpaStatisticsRepository extends Repository<User, Long>, Statist
                 (SELECT COUNT(*) FROM listings) AS "listingsCount"
             """, nativeQuery = true)
     StatisticsProjection getStatistics();
+
+    @Override
+    @Query(value = "SELECT COALESCE(AVG(price), 0) FROM listings", nativeQuery = true)
+    BigDecimal getAverageListingPrice();
+
+    @Override
+    @Query(value = "SELECT COALESCE(MAX(price), 0) FROM listings", nativeQuery = true)
+    BigDecimal getMaxListingPrice();
 }

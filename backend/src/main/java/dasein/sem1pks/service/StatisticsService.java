@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Service
 @RequiredArgsConstructor
 public class StatisticsService {
@@ -19,7 +22,15 @@ public class StatisticsService {
         return new StatisticsResponse(
                 statistics.getUsersCount(),
                 statistics.getOrdersCount(),
-                statistics.getListingsCount()
+                statistics.getListingsCount(),
+                money(statisticsRepository.getAverageListingPrice()),
+                money(statisticsRepository.getMaxListingPrice())
         );
+    }
+
+    private BigDecimal money(BigDecimal value) {
+        return value == null
+                ? BigDecimal.ZERO.setScale(2)
+                : value.setScale(2, RoundingMode.HALF_UP);
     }
 }
