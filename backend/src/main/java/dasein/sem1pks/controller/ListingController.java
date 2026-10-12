@@ -4,6 +4,7 @@ import dasein.sem1pks.config.CurrentUser;
 import dasein.sem1pks.domain.ListingCategory;
 import dasein.sem1pks.dto.request.ListingCreateRequest;
 import dasein.sem1pks.dto.request.ListingSortBy;
+import dasein.sem1pks.dto.request.ListingUpdateRequest;
 import dasein.sem1pks.dto.response.ListingResponse;
 import dasein.sem1pks.service.ListingService;
 import jakarta.validation.Valid;
@@ -39,6 +40,21 @@ public class ListingController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{listingId}")
+    public ResponseEntity<ListingResponse> updateListing(
+            @AuthenticationPrincipal CurrentUser currentUser,
+            @PathVariable Long listingId,
+            @Valid @RequestBody ListingUpdateRequest request
+    ) {
+        return ResponseEntity.ok(listingService.updateListing(
+                currentUser.id(),
+                listingId,
+                request.title(),
+                request.price(),
+                request.category()
+        ));
     }
 
     @PatchMapping("/{listingId}/sold")

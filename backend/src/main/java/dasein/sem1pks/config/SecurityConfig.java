@@ -48,6 +48,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/listings")
                         .authenticated()
 
+                        .requestMatchers(HttpMethod.PUT, "/api/listings/*")
+                        .authenticated()
+
                         .requestMatchers(
                                 HttpMethod.PATCH,
                                 "/api/listings/*/sold",

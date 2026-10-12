@@ -50,6 +50,30 @@ public class ListingService {
     }
 
     @Transactional
+    public ListingResponse updateListing(
+            Long userId,
+            Long listingId,
+            String title,
+            BigDecimal price,
+            ListingCategory category
+    ) {
+        Listing listing = getListing(listingId);
+
+        if (!listing.getUser().getId().equals(userId)) {
+            throw new ListingAccessDeniedException(listingId);
+        }
+        if (listing.getStatus() == ListingStatus.CLOSED) {
+            throw new ListingStateConflictException();
+        }
+
+        listing.setTitle(title.trim());
+        listing.setPrice(price);
+        listing.setCategory(category);
+
+        return toDto(listingRepository.save(listing));
+    }
+
+    @Transactional
     public ListingResponse markAsSold(Long userId, Long listingId) {
         Listing listing = getListing(listingId);
 
