@@ -24,10 +24,7 @@ final class HttpTransport {
 
     HttpTransport(String baseUrl, Session session) {
         baseUri = URI.create(baseUrl.replaceAll("/+$", ""));
-        if (!List.of("http", "https").contains(baseUri.getScheme()) || baseUri.getHost() == null
-                || baseUri.getUserInfo() != null || baseUri.getQuery() != null || baseUri.getFragment() != null) {
-            throw new IllegalArgumentException("Адрес API должен быть корректным HTTP(S) URL");
-        }
+
         this.session = session;
         http = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
