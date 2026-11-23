@@ -1,0 +1,8 @@
+﻿"id","username","email","is_blocked","role"
+"1","Administrator","admin@example.com","false","ADMIN"
+"2","Demo 1","demo1@example.com","false","USER"
+"3","Demo 2","demo2@example.com","false","USER"
+"4","Demo 3","demo3@example.com","false","USER"
+"5","Demo 4","demo4@example.com","false","USER"
+"6","Demo 5","demo5@example.com","false","USER"
+"7","EGOR","egor.no.login@gmail.com","false","USER"

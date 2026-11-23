@@ -64,7 +64,7 @@ final class HttpTransport {
             Thread.currentThread().interrupt();
             throw new ApiException("Запрос был прерван", exception);
         } catch (IOException exception) {
-            throw new ApiException("Не удалось связаться с сервером. Проверьте, что backend запущен.", exception);
+            throw new ApiException("Не удалось связаться с сервером", exception);
         }
     }
 

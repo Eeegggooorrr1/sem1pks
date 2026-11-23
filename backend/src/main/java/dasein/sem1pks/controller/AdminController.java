@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
     private final ExportService exportService;
-    @GetMapping(value="/export", produces="application/zip")
+
+    @GetMapping(value = "/export", produces = "application/zip")
     public ResponseEntity<byte[]> export() {
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"domain-export.zip\"")
-            .cacheControl(CacheControl.noStore())
-            .body(exportService.export());
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"domain-export.zip\"")
+                .cacheControl(CacheControl.noStore())
+                .body(exportService.export());
     }
 }

@@ -34,3 +34,9 @@ build/
 .env
 .env.test
 /exports/domain-export.zip
+node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+.impeccable/review/
+.impeccable/cache/

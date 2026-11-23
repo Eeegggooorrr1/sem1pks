@@ -107,6 +107,31 @@ tbody th[scope="row"] { background: transparent; font-weight: 500; }
 .record-fields { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px 24px; max-width: 780px; margin: 26px 0; }
 dt { color: var(--muted); }
 dd { margin: 0; overflow-wrap: anywhere; }
+.listing-details {
+  max-width: 780px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.listing-summary, .listing-metadata {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 0;
+}
+.listing-summary { align-items: end; }
+.listing-details dt { margin-bottom: 4px; font-size: 13px; }
+.listing-summary dd { font-size: 16px; font-weight: 600; }
+.listing-price dd { font-size: 26px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.listing-status-active { color: var(--success); }
+.listing-description {
+  margin: 20px 0;
+  padding: 20px 0;
+  border-block: 1px solid var(--border);
+}
+.listing-description h2 { margin: 0 0 8px; font-size: 16px; }
+.listing-description p { margin: 0; }
+.listing-tags { grid-column: 1 / -1; }
 .description, .note-body { white-space: pre-wrap; overflow-wrap: anywhere; }
 .note-body { min-width: 200px; max-width: 600px; }
 .note-form { display: grid; gap: 14px; max-width: 700px; margin-top: 22px; }
@@ -138,6 +163,9 @@ dialog .actions { margin-top: 24px; }
   .filter-bottom .inline-label { flex-direction: column; align-items: flex-start; }
   .filter-bottom > .actions { align-items: flex-end; }
   .record-fields { grid-template-columns: 110px minmax(0,1fr); gap: 12px; }
+  .listing-details { padding: 16px; }
+  .listing-summary, .listing-metadata { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .listing-price { grid-column: 1 / -1; }
   .pagination > .actions { width: 100%; }
   .pagination .inline-label { margin-right: auto; }
   .inline-editor { padding: 16px; }

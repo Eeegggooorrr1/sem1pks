@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "listings")
@@ -22,8 +23,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Listing {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Version
     @Column(nullable = false)
@@ -51,9 +52,11 @@ public class Listing {
             foreignKey = @ForeignKey(name = "fk_listings_user"))
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private ListingCategory category = ListingCategory.OTHER;
+    @Column(name = "category_id", nullable = false)
+    private UUID categoryId;
+
+    @Column(nullable = false)
+    private boolean archived;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

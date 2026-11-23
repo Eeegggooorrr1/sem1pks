@@ -10,6 +10,7 @@ const messages: Readonly<Record<string, string>> = {
   ACCOUNT_BLOCKED: 'Аккаунт заблокирован. Если это ошибка, обратитесь к администратору.',
   ACCOUNT_ALREADY_EXISTS: 'Аккаунт с таким email уже есть. Войдите или укажите другой адрес.',
   ACCOUNT_NOT_FOUND: 'Пользователь не найден. Обновите список.',
+  ADMIN_SELF_ACCESS_CHANGE: 'Свою роль и состояние аккаунта изменить нельзя.',
   NOT_FOUND: 'Запись не найдена. Возможно, ее удалили.',
   LISTING_NOT_FOUND: 'Объявление больше недоступно.',
   ORDER_NOT_FOUND_EXCEPTION: 'Заказ не найден. Обновите список.',

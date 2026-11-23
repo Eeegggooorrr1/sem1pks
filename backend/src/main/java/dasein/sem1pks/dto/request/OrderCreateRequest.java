@@ -2,7 +2,9 @@ package dasein.sem1pks.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public record OrderCreateRequest(
         @NotNull
-        Long listingId
+        UUID listingId
 ) {}

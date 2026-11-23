@@ -35,5 +35,61 @@ services:
 
   frontend-tests:
     build:
-      context: console_client
+      context: frontend
       target: test
+
+  backend:
+    profiles: ["e2e"]
+    build:
+      context: backend
+      target: runtime
+    environment:
+      DB_URL: jdbc:postgresql://test-db:5432/${TEST_DB_NAME:?Set TEST_DB_NAME in .env.test}
+      POSTGRES_USER: ${TEST_DB_USER:?Set TEST_DB_USER in .env.test}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:?Set TEST_DB_PASSWORD in .env.test}
+      APP_JWT_ACCESS_SECRET: ${TEST_JWT_SECRET:?Set TEST_JWT_SECRET in .env.test}
+      APP_JWT_ACCESS_EXPIRATION_MILLISECONDS: ${TEST_JWT_EXPIRATION:?Set TEST_JWT_EXPIRATION in .env.test}
+      BOOTSTRAP_ENABLED: true
+      BOOTSTRAP_ADMIN_EMAIL: ${TEST_ADMIN_EMAIL:?Set TEST_ADMIN_EMAIL in .env.test}
+      BOOTSTRAP_ADMIN_PASSWORD: ${TEST_ADMIN_PASSWORD:?Set TEST_ADMIN_PASSWORD in .env.test}
+      BOOTSTRAP_DEMO_ENABLED: ${TEST_DEMO_ENABLED:?Set TEST_DEMO_ENABLED in .env.test}
+      BOOTSTRAP_DEMO_PASSWORD: ${TEST_DEMO_PASSWORD:?Set TEST_DEMO_PASSWORD in .env.test}
+    depends_on:
+      test-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/actuator/health/readiness"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 15s
+
+  web:
+    profiles: ["e2e"]
+    build:
+      context: frontend
+      target: runtime
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  frontend-e2e:
+    profiles: ["e2e"]
+    build:
+      context: frontend
+      target: e2e
+    environment:
+      E2E_BASE_URL: http://web
+      E2E_ADMIN_EMAIL: ${TEST_ADMIN_EMAIL:?Set TEST_ADMIN_EMAIL in .env.test}
+      E2E_ADMIN_PASSWORD: ${TEST_ADMIN_PASSWORD:?Set TEST_ADMIN_PASSWORD in .env.test}
+      E2E_DEMO_PASSWORD: ${TEST_DEMO_PASSWORD:?Set TEST_DEMO_PASSWORD in .env.test}
+    volumes:
+      - ./frontend/test-results:/app/test-results
+    depends_on:
+      web:
+        condition: service_healthy

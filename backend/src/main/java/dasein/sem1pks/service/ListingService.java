@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +27,11 @@ public class ListingService {
 
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final CategoryService categories;
 
     @Transactional
     public ListingResponse createListing(
-            Long userId,
+            UUID userId,
             String title,
             String description,
             BigDecimal price,
@@ -44,15 +46,15 @@ public class ListingService {
         listing.setTitle(title);
         listing.setUser(user);
         listing.setPrice(price);
-        listing.setCategory(category != null ? category : ListingCategory.OTHER);
+        listing.setCategoryId(categories.idByCode((category != null ? category : ListingCategory.OTHER).name()));
 
         return toDto(listingRepository.save(listing));
     }
 
     @Transactional
     public ListingResponse updateListing(
-            Long userId,
-            Long listingId,
+            UUID userId,
+            UUID listingId,
             String title,
             BigDecimal price,
             ListingCategory category
@@ -68,13 +70,13 @@ public class ListingService {
 
         listing.setTitle(title.trim());
         listing.setPrice(price);
-        listing.setCategory(category);
+        listing.setCategoryId(categories.idByCode(category.name()));
 
         return toDto(listingRepository.save(listing));
     }
 
     @Transactional
-    public ListingResponse markAsSold(Long userId, Long listingId) {
+    public ListingResponse markAsSold(UUID userId, UUID listingId) {
         Listing listing = getListing(listingId);
 
         if (!listing.getUser().getId().equals(userId)) {
@@ -89,7 +91,7 @@ public class ListingService {
     }
 
     @Transactional
-    public ListingResponse markAsActive(Long userId, Long listingId) {
+    public ListingResponse markAsActive(UUID userId, UUID listingId) {
         Listing listing = getListing(listingId);
 
         if (!listing.getUser().getId().equals(userId)) {
@@ -104,7 +106,7 @@ public class ListingService {
     }
 
     @Transactional
-    public void markAsClosed(Long userId, Long listingId) {
+    public void markAsClosed(UUID userId, UUID listingId) {
         Listing listing = getListing(listingId);
 
 
@@ -116,14 +118,14 @@ public class ListingService {
     }
 
     @Transactional
-    public void markAsClosedAsAdmin(Long listingId) {
+    public void markAsClosedAsAdmin(UUID listingId) {
         Listing listing = getListing(listingId);
         listing.setStatus(ListingStatus.CLOSED);
         listingRepository.save(listing);
     }
 
     @Transactional(readOnly = true)
-    public List<ListingResponse> findMyListings(Long userId) {
+    public List<ListingResponse> findMyListings(UUID userId) {
         return listingRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
                 .map(this::toDto)
                 .toList();
@@ -141,7 +143,7 @@ public class ListingService {
 
         return listingRepository.search(
                         normalizePrefix(prefix),
-                        category,
+                        category == null ? null : categories.idByCode(category.name()),
                         ListingStatus.CLOSED,
                         ListingStatus.SOLD,
                         sort
@@ -151,7 +153,7 @@ public class ListingService {
     }
 
 
-    private Listing getListing(Long listingId) {
+    private Listing getListing(UUID listingId) {
         return listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException(listingId));
     }
@@ -177,7 +179,7 @@ public class ListingService {
                 listing.getDescription(),
                 listing.getPrice(),
                 listing.getStatus(),
-                listing.getCategory(),
+                listing.getCategoryId(),
                 listing.getUser().getId(),
                 listing.getCreatedAt()
         );

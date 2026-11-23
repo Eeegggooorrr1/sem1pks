@@ -1,25 +1,26 @@
 package dasein.sem1pks.repository;
 
 import dasein.sem1pks.domain.Listing;
-import dasein.sem1pks.domain.ListingCategory;
 import dasein.sem1pks.domain.ListingStatus;
 import org.springframework.data.domain.Sort;
 
-
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ListingRepository {
 
     Listing save(Listing listing);
 
-    Optional<Listing> findById(Long id);
+    Optional<Listing> findById(UUID id);
 
-    List<Listing> findByUserIdOrderByCreatedAtDesc(Long userId);
+    Optional<UUID> lockById(UUID id);
+
+    List<Listing> findByUserIdOrderByCreatedAtDesc(UUID userId);
 
     List<Listing> search(
             String prefix,
-            ListingCategory category,
+            UUID categoryId,
             ListingStatus closedStatus,
             ListingStatus soldStatus,
             Sort sort

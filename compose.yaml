@@ -24,7 +24,6 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:?Set POSTGRES_DB in .env}
       POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
-      SPRING_PROFILES_ACTIVE: ${REPOSITORY_PROFILE:?Set REPOSITORY_PROFILE in .env}
       APP_JWT_ACCESS_SECRET: ${APP_JWT_ACCESS_SECRET:?Set APP_JWT_ACCESS_SECRET in .env}
       APP_JWT_ACCESS_EXPIRATION_MILLISECONDS: ${APP_JWT_ACCESS_EXPIRATION_MILLISECONDS:?Set JWT expiration in .env}
       BOOTSTRAP_ENABLED: ${BOOTSTRAP_ENABLED:?Set BOOTSTRAP_ENABLED in .env}
@@ -45,6 +44,21 @@ services:
       start_period: 20s
 
   frontend:
+    build:
+      context: frontend
+      target: runtime
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:?Set FRONTEND_PORT in .env}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  console:
     build:
       context: console_client
       target: runtime

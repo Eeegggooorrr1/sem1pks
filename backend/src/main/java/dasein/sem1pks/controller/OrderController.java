@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -36,15 +37,21 @@ public class OrderController {
     @PatchMapping("/{orderId}/confirm")
     public ResponseEntity<OrderResponse> confirmOrder(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @PathVariable Long orderId
+            @PathVariable UUID orderId
     ) {
         return ResponseEntity.ok(orderService.confirmOrder(currentUser.id(), orderId));
+    }
+
+    @PostMapping("/listings/{listingUuid}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderResponse createByUuid(@AuthenticationPrincipal CurrentUser user,@PathVariable UUID listingUuid) {
+        return orderService.createOrder(user.id(), listingUuid);
     }
 
     @PatchMapping("/{orderId}/complete")
     public ResponseEntity<OrderResponse> completeOrder(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @PathVariable Long orderId
+            @PathVariable UUID orderId
     ) {
         return ResponseEntity.ok(orderService.completeOrder(currentUser.id(), orderId));
     }
@@ -52,7 +59,7 @@ public class OrderController {
     @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @PathVariable Long orderId
+            @PathVariable UUID orderId
     ) {
         orderService.cancelOrder(currentUser.id(), orderId);
 

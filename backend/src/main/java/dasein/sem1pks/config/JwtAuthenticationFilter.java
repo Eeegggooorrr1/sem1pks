@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final RestAuthenticationEntryPoint errorResponseWriter;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return Set.of("/api/users/login", "/api/users/register", "/api/users/refresh", "/api/users/logout")
+                .contains(request.getServletPath());
+    }
 
     @Override
     protected void doFilterInternal(

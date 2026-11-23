@@ -17,36 +17,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
     private final OrderRepository orderRepository;
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final AuditService audit;
 
     @Transactional
-    public OrderResponse createOrder(
-            Long buyerId,
-            Long listingId
-    ) {
-        User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new AccountNotFoundException(buyerId));
+    public OrderResponse createOrder(UUID buyerId, UUID listingId) {
+        User buyer =
+                userRepository.findById(buyerId).orElseThrow(() -> new AccountNotFoundException(buyerId));
 
-        Listing listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ListingNotFoundException(listingId));
+        listingRepository.lockById(listingId).orElseThrow(() -> new ListingNotFoundException(listingId));
+        Listing listing = listingRepository.findById(listingId).orElseThrow(
+                () -> new ListingNotFoundException(listingId));
 
         if (listing.getUser().getId().equals(buyerId)) {
-            throw new OrderCreateConflictException(
-                    "Нельзя оставить заказ на свое объявление"
-            );
+            throw new OrderCreateConflictException("Нельзя оставить заказ на свое объявление");
         }
 
-        if (listing.getStatus() != ListingStatus.ACTIVE) {
-            throw new OrderCreateConflictException(
-                    "Нельзя оставить заказ на закрытое объявление"
-            );
+        if (listing.getStatus() != ListingStatus.ACTIVE || listing.isArchived()) {
+            throw new OrderCreateConflictException("Нельзя оставить заказ на закрытое объявление");
         }
 
         Order order = new Order();
@@ -54,14 +49,13 @@ public class OrderService {
         order.setBuyer(buyer);
         order.setStatus(OrderStatus.PENDING);
 
-        return toDto(orderRepository.save(order));
+        Order saved = orderRepository.save(order);
+        audit.record(buyerId, "ORDER_CREATE", "ORDER", saved.getId(), "Заказ создан");
+        return toDto(saved);
     }
 
     @Transactional
-    public OrderResponse confirmOrder(
-            Long sellerId,
-            Long orderId
-    ) {
+    public OrderResponse confirmOrder(UUID sellerId, UUID orderId) {
         Order order = getOrder(orderId);
 
         checkSeller(order, sellerId);
@@ -70,17 +64,14 @@ public class OrderService {
             throw new OrderStateConflictException();
         }
 
-
         order.setStatus(OrderStatus.CONFIRMED);
+        audit.record(sellerId, "ORDER_CONFIRM", "ORDER", orderId, "Заказ подтвержден");
 
         return toDto(orderRepository.save(order));
     }
 
     @Transactional
-    public OrderResponse completeOrder(
-            Long buyerId,
-            Long orderId
-    ) {
+    public OrderResponse completeOrder(UUID buyerId, UUID orderId) {
         Order order = getOrder(orderId);
 
         checkBuyer(order, buyerId);
@@ -90,15 +81,13 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.COMPLETED);
+        audit.record(buyerId, "ORDER_COMPLETE", "ORDER", orderId, "Заказ завершен");
 
         return toDto(orderRepository.save(order));
     }
 
     @Transactional
-    public void cancelOrder(
-            Long userId,
-            Long orderId
-    ) {
+    public void cancelOrder(UUID userId, UUID orderId) {
         Order order = getOrder(orderId);
 
         checkParticipant(order, userId);
@@ -108,11 +97,12 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.CANCELLED);
+        audit.record(userId, "ORDER_CANCEL", "ORDER", orderId, "Заказ отменен");
         orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> findOrders(Long userId, OrderDirection direction) {
+    public List<OrderResponse> findOrders(UUID userId, OrderDirection direction) {
         List<Order> orders = switch (direction) {
             case INCOMING -> orderRepository.findIncomingOrders(userId);
             case OUTGOING -> orderRepository.findOutgoingOrders(userId);
@@ -121,38 +111,34 @@ public class OrderService {
         return orders.stream().map(this::toDto).toList();
     }
 
-    private Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+    private Order getOrder(UUID orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
-    private void checkSeller(Order order, Long userId) {
+    private void checkSeller(Order order, UUID userId) {
         if (!order.getListing().getUser().getId().equals(userId)) {
             throw new OrderAccessDeniedException(order.getId());
         }
     }
 
-    private void checkBuyer(Order order, Long userId) {
+    private void checkBuyer(Order order, UUID userId) {
         if (!order.getBuyer().getId().equals(userId)) {
             throw new OrderAccessDeniedException(order.getId());
         }
     }
 
-    private void checkParticipant(Order order, Long userId) {
+    private void checkParticipant(Order order, UUID userId) {
         boolean isBuyer = order.getBuyer().getId().equals(userId);
         boolean isSeller = order.getListing().getUser().getId().equals(userId);
 
-        if (!isBuyer && !isSeller) {throw new OrderAccessDeniedException(order.getId());}
+        if (!isBuyer && !isSeller) {
+            throw new OrderAccessDeniedException(order.getId());
+        }
     }
 
     private OrderResponse toDto(Order order) {
-        return new OrderResponse(
-                order.getId(),
-                order.getListing().getId(),
-                order.getBuyer().getId(),
-                order.getListing().getUser().getId(),
-                order.getStatus(),
-                order.getOrderDate()
-        );
+        return new OrderResponse(order.getId(), order.getListing().getId(), order.getBuyer().getId(),
+                order.getListing().getUser().getId(), order.getStatus(), order.getOrderDate(),
+                order.getListing().getTitle());
     }
 }

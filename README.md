@@ -1,36 +1,34 @@
 # Сервис объявлений
 
-Небольшой сервис объявлений с регистрацией, поиском, заказами и ролями пользователей.
-Backend написан на Spring Boot, доступны консольный и JavaFX-клиенты на Java 17. Данные в PostgreSQL.
-
+Сервис объявлений с поиском, категориями, тегами, заметками и архивом. Есть массовые операции,
+импорт и экспорт CSV, аналитика и управление пользователями. Backend написан на Spring Boot,
+данные хранятся в PostgreSQL. 
 
 ## Запуск
-
-Нужны Docker и команда `make`. Для JavaFX-клиента дополнительно требуется JDK 17 или новее,
-путь к нему задаётся через `JAVA_HOME` в `.env`.
 
 1. Скопируйте пример настроек в корневой каталог:
 
 ```sh
 cp .env.example .env
 ```
-Настройки из `.env.example` подходят для локального запуска, можно ничего не колхозить.
+Для локального запуска можно скопировать все значения из `.env.example` как есть.
 
 2. Запустите проект:
 
 ```sh
 make start
 ```
-Если `make` не установлен, просто запускать код с соответствующих команд.
+Без make выполните `docker compose --env-file .env up --build -d --wait frontend`.
 
 
 После запуска:
 
+- сайт: http://localhost:5173
 - API и Swagger доступны на http://localhost:8080/swagger-ui/index.html
 - администратор: `admin@example.com / Admin-local-123`
 - демопользователи: `demo1@example.com` ... `demo5@example.com`
 - пароль демопользователей: `Demo-local-123`
-- архивы экспорта сохраняются в папку `exports`
+- CSV скачивается через `/api/listings/export`, общий экспорт администратора - через `/api/admin/export`
 
 
 ## Настройки
@@ -39,51 +37,39 @@ make start
 | Параметр | Назначение                         |
 | --- |------------------------------------|
 | `BACKEND_PORT` | Порт API на компьютере             |
+| `FRONTEND_PORT` | Порт сайта, по умолчанию в примере 5173 |
 | `POSTGRES_PORT` | Порт PostgreSQL на компьютере      |
-| `REPOSITORY_PROFILE` | `jdbc` или `jpa`                   |
 | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | Данные PostgreSQL                  |
 | `APP_JWT_ACCESS_SECRET` | Секрет JWT, >= 32 байт             |
 | `APP_JWT_ACCESS_EXPIRATION_MILLISECONDS` | Время жизни токена                 |
-| `BOOTSTRAP_ENABLED` | Включить создание стартовых данных |
+| `BOOTSTRAP_ENABLED` | Включить создание стартовых учетных записей |
 | `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` | Учетная запись администратора      |
-| `BOOTSTRAP_DEMO_ENABLED` | Включить демоданные                |
+| `BOOTSTRAP_DEMO_ENABLED` | Создать пять демопользователей     |
 | `BOOTSTRAP_DEMO_PASSWORD` | Пароль демопользователей           |
-| `JAVA_HOME` | Путь к JDK для локального запуска JavaFX |
 
-Если порт занят, измените `BACKEND_PORT` или `POSTGRES_PORT`. После изменения выполните
-`make up`. Основной запуск использует JPA; в `.env` должно быть:
-
-```dotenv
-REPOSITORY_PROFILE=jpa
-```
-
+Если порт занят, измените `FRONTEND_PORT`, `BACKEND_PORT` или `POSTGRES_PORT`. После изменения выполните
+`make up`.
 Внутренние адреса PostgreSQL и backend Compose задает сам, поэтому их не нужно добавлять в `.env`.
-Для запуска клиента отдельно задайте `API_URL` и `EXPORT_DIR` в окружении процесса.
+При первом запуске подойдет пустая база. Flyway создаст таблицы и заполнит справочник категорий. Bootstrap создаст администратора и, если включены демопользователи, пять обычных аккаунтов. Каталог объявлений изначально пуст.
 
 ## Команды
 
 | Команда | Действие |
 | --- | --- |
-| `make start` / `make javafx` | Запустить backend и открыть JavaFX-клиент |
-| `make console` / `make cli` | Запустить backend и открыть консольный клиент |
-| `make up` | Запустить PostgreSQL и backend |
-| `make build` | Собрать backend и JavaFX-клиент |
-| `make build-console` | Собрать образ консольного клиента |
+| `make start` / `make up` | Запустить сайт, backend и PostgreSQL |
+| `make build-backend` | Собрать образ backend |
+| `make build-frontend` | Собрать образ сайта |
+| `make build` | Собрать backend и сайт |
 | `make logs` | Смотреть логи backend |
 | `make ps` | Посмотреть состояние контейнеров |
 | `make stop` | Остановить контейнеры |
 | `make down` | Удалить контейнеры, сохранив данные |
-| `make test` | Запустить backend и frontend тесты |
+| `make test-backend` | Проверить бэкенд на PostgreSQL |
+| `make test-frontend` | Тесты HTTP-клиента, проверка TypeScript и сборка сайта |
+| `make test` | Проверить backend и frontend |
+| `make test-e2e` | Проверить сайт в Chromium с настоящим API и отдельной тестовой БД |
 | `make test-down` | Удалить тестовые контейнеры |
-| `make smoke` | Запустить сквозную проверку API |
 
 
-## Тесты
 
-Тестовая конфигурация находится в `.env.test`, ее можно получить копированием
-`.env.test.example`.
-
-```sh
-make test
-```
 

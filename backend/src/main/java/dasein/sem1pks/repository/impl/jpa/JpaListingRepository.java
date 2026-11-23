@@ -1,10 +1,8 @@
 package dasein.sem1pks.repository.impl.jpa;
 
 import dasein.sem1pks.domain.Listing;
-import dasein.sem1pks.domain.ListingCategory;
 import dasein.sem1pks.domain.ListingStatus;
 import dasein.sem1pks.repository.ListingRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,25 +11,37 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-@Profile("jpa")
 public interface JpaListingRepository
-        extends JpaRepository<Listing, Long>, ListingRepository {
+        extends JpaRepository<Listing, UUID>, ListingRepository {
+    @Override
+    default Listing save(Listing listing) {
+        return saveAndFlush(listing);
+    }
+
 
     @Override
-    Optional<Listing> findById(Long id);
+    Optional<Listing> findById(UUID id);
 
     @Override
-    List<Listing> findByUserIdOrderByCreatedAtDesc(Long userId);
+    @Query(value = "SELECT id FROM listings WHERE id = :id FOR UPDATE", nativeQuery = true)
+    Optional<UUID> lockById(@Param("id") UUID id);
+
+    @Override
+    List<Listing> findByUserIdOrderByCreatedAtDesc(UUID userId);
 
     @Override
     @Query("""
             select listing
             from Listing listing
             where listing.status <> :closedStatus
-              and (cast(:prefix as String) is null or lower(listing.title) like lower(concat(cast(:prefix as String), '%')) escape '!')
-              and (:category is null or listing.category = :category)
+              and (
+                  cast(:prefix as String) is null
+                  or lower(listing.title) like lower(concat(cast(:prefix as String), '%')) escape '!'
+              )
+              and (cast(:categoryId as uuid) is null or listing.categoryId = :categoryId)
             order by case
                 when listing.status = :soldStatus then 1
                 else 0
@@ -39,7 +49,7 @@ public interface JpaListingRepository
             """)
     List<Listing> search(
             @Param("prefix") String prefix,
-            @Param("category") ListingCategory category,
+            @Param("categoryId") UUID categoryId,
             @Param("closedStatus") ListingStatus closedStatus,
             @Param("soldStatus") ListingStatus soldStatus,
             Sort sort

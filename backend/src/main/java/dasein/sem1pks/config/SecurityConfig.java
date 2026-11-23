@@ -36,34 +36,25 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/api/users/register",
-                                "/api/users/login"
+                                "/api/users/login",
+                                "/api/users/refresh",
+                                "/api/users/logout"
                         ).permitAll()
 
                         .requestMatchers("/api/admin/**")
                         .hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PATCH, "/api/listings/*/closed/admin")
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.POST, "/api/listings")
-                        .authenticated()
-
-                        .requestMatchers(HttpMethod.PUT, "/api/listings/*")
-                        .authenticated()
-
-                        .requestMatchers(
-                                HttpMethod.PATCH,
-                                "/api/listings/*/sold",
-                                "/api/listings/*/active",
-                                "/api/listings/*/closed"
-                        )
-                        .authenticated()
-
-                        .requestMatchers(HttpMethod.GET, "/api/listings/my")
-                        .authenticated()
-
-                        .requestMatchers(HttpMethod.GET, "/api/listings")
-                        .permitAll()
+                        .requestMatchers("/api/users/me", "/api/users/password").authenticated()
+                        .requestMatchers("/api/analytics", "/api/listings/import/**", "/api/listings/bulk",
+                                "/api/listings/*/restore").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/listings/*", "/api/listings/*/permanent").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/listings/**", "/api/listings", "/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/api/orders/**").authenticated()
 

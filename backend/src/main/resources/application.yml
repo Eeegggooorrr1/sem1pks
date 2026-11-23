@@ -37,12 +37,3 @@ logging:
   level:
     root: INFO
     dasein.sem1pks: INFO
----
-spring:
-  config:
-    activate:
-      on-profile: jdbc
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
-      - org.springframework.boot.data.jpa.autoconfigure.DataJpaRepositoriesAutoConfiguration
