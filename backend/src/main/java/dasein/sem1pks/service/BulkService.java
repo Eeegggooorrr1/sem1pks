@@ -1,12 +1,12 @@
 package dasein.sem1pks.service;
 
-import dasein.sem1pks.dto.request.BulkAction;
-import dasein.sem1pks.dto.request.BulkItem;
-import dasein.sem1pks.dto.request.BulkRequest;
-import dasein.sem1pks.dto.request.ListingInput;
-import dasein.sem1pks.dto.request.UpdateListing;
-import dasein.sem1pks.dto.response.BulkError;
-import dasein.sem1pks.dto.response.BulkResult;
+import dasein.sem1pks.dto.request.bulk.BulkAction;
+import dasein.sem1pks.dto.request.bulk.BulkItem;
+import dasein.sem1pks.dto.request.bulk.BulkRequest;
+import dasein.sem1pks.dto.request.listing.ListingInput;
+import dasein.sem1pks.dto.request.listing.UpdateListing;
+import dasein.sem1pks.dto.response.bulk.BulkError;
+import dasein.sem1pks.dto.response.bulk.BulkResult;
 import dasein.sem1pks.exception.DomainException;
 import dasein.sem1pks.exception.badrequest.InvalidCatalogDataException;
 import lombok.RequiredArgsConstructor;

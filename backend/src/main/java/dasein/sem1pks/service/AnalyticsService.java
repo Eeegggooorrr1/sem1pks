@@ -1,6 +1,6 @@
 package dasein.sem1pks.service;
 
-import dasein.sem1pks.dto.response.Analytics;
+import dasein.sem1pks.dto.response.analytics.Analytics;
 import dasein.sem1pks.repository.AnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package dasein.sem1pks.repository.impl.jdbc;
 
-import dasein.sem1pks.dto.response.Analytics;
-import dasein.sem1pks.dto.response.Group;
+import dasein.sem1pks.dto.response.analytics.Analytics;
+import dasein.sem1pks.dto.response.analytics.Group;
 import dasein.sem1pks.repository.AnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

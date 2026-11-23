@@ -1,6 +1,6 @@
 package dasein.sem1pks.repository;
 
-import dasein.sem1pks.dto.response.NoteView;
+import dasein.sem1pks.dto.response.note.NoteView;
 
 import java.util.List;
 import java.util.Optional;

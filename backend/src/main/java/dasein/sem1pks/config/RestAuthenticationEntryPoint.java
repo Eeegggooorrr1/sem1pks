@@ -1,6 +1,6 @@
 package dasein.sem1pks.config;
 
-import dasein.sem1pks.dto.response.ErrorResponse;
+import dasein.sem1pks.dto.response.common.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

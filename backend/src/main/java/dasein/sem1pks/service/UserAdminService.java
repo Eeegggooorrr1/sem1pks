@@ -1,9 +1,9 @@
 package dasein.sem1pks.service;
 
 import dasein.sem1pks.domain.User;
-import dasein.sem1pks.dto.request.AdminUserRequest;
-import dasein.sem1pks.dto.response.Page;
-import dasein.sem1pks.dto.response.UserView;
+import dasein.sem1pks.dto.request.admin.AdminUserRequest;
+import dasein.sem1pks.dto.response.admin.UserView;
+import dasein.sem1pks.dto.response.common.Page;
 import dasein.sem1pks.exception.conflict.AccountAlreadyExistsException;
 import dasein.sem1pks.exception.forbidden.AdminSelfAccessChangeException;
 import dasein.sem1pks.exception.notfound.AccountNotFoundException;

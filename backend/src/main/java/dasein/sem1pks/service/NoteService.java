@@ -1,7 +1,7 @@
 package dasein.sem1pks.service;
 
-import dasein.sem1pks.dto.request.NoteInput;
-import dasein.sem1pks.dto.response.NoteView;
+import dasein.sem1pks.dto.request.note.NoteInput;
+import dasein.sem1pks.dto.response.note.NoteView;
 import dasein.sem1pks.exception.forbidden.CatalogAccessDeniedException;
 import dasein.sem1pks.exception.notfound.CatalogEntryNotFoundException;
 import dasein.sem1pks.repository.NoteRepository;

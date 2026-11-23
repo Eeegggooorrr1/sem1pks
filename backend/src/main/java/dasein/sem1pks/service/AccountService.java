@@ -1,8 +1,8 @@
 package dasein.sem1pks.service;
 
 import dasein.sem1pks.domain.User;
-import dasein.sem1pks.dto.response.AccountResponse;
-import dasein.sem1pks.dto.response.AuthResponse;
+import dasein.sem1pks.dto.response.account.AccountResponse;
+import dasein.sem1pks.dto.response.account.AuthResponse;
 import dasein.sem1pks.exception.conflict.AccountAlreadyExistsException;
 import dasein.sem1pks.exception.forbidden.AccountBlockedException;
 import dasein.sem1pks.exception.unauthorized.InvalidCredentialsException;

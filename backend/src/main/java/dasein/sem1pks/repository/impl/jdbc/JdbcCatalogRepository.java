@@ -2,11 +2,11 @@ package dasein.sem1pks.repository.impl.jdbc;
 
 import dasein.sem1pks.domain.ListingStatus;
 import dasein.sem1pks.domain.Priority;
-import dasein.sem1pks.dto.request.ListingFilter.Direction;
-import dasein.sem1pks.dto.request.ListingFilter;
-import dasein.sem1pks.dto.request.ListingInput;
-import dasein.sem1pks.dto.response.ListingView;
-import dasein.sem1pks.dto.response.Page;
+import dasein.sem1pks.dto.request.listing.ListingFilter.Direction;
+import dasein.sem1pks.dto.request.listing.ListingFilter;
+import dasein.sem1pks.dto.request.listing.ListingInput;
+import dasein.sem1pks.dto.response.common.Page;
+import dasein.sem1pks.dto.response.listing.ListingView;
 import dasein.sem1pks.exception.conflict.CatalogConflictException;
 import dasein.sem1pks.repository.CatalogRepository;
 import lombok.RequiredArgsConstructor;

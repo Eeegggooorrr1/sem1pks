@@ -1,12 +1,12 @@
 package dasein.sem1pks.controller;
 
 import dasein.sem1pks.config.CurrentUser;
-import dasein.sem1pks.dto.request.AccountLoginRequest;
-import dasein.sem1pks.dto.request.AccountRegisterRequest;
-import dasein.sem1pks.dto.request.PasswordChangeRequest;
-import dasein.sem1pks.dto.request.RefreshRequest;
-import dasein.sem1pks.dto.response.AccountResponse;
-import dasein.sem1pks.dto.response.AuthResponse;
+import dasein.sem1pks.dto.request.account.AccountLoginRequest;
+import dasein.sem1pks.dto.request.account.AccountRegisterRequest;
+import dasein.sem1pks.dto.request.account.PasswordChangeRequest;
+import dasein.sem1pks.dto.request.account.RefreshRequest;
+import dasein.sem1pks.dto.response.account.AccountResponse;
+import dasein.sem1pks.dto.response.account.AuthResponse;
 import dasein.sem1pks.exception.forbidden.AccountBlockedException;
 import dasein.sem1pks.exception.unauthorized.InvalidCredentialsException;
 import dasein.sem1pks.service.AccountService;

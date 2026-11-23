@@ -1,8 +1,8 @@
 package dasein.sem1pks.service;
 
 import dasein.sem1pks.domain.*;
-import dasein.sem1pks.dto.request.OrderDirection;
-import dasein.sem1pks.dto.response.OrderResponse;
+import dasein.sem1pks.dto.request.order.OrderDirection;
+import dasein.sem1pks.dto.response.order.OrderResponse;
 import dasein.sem1pks.exception.conflict.OrderCreateConflictException;
 import dasein.sem1pks.exception.conflict.OrderStateConflictException;
 import dasein.sem1pks.exception.forbidden.OrderAccessDeniedException;

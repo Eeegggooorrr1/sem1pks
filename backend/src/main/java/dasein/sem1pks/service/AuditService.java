@@ -1,8 +1,8 @@
 package dasein.sem1pks.service;
 
-import dasein.sem1pks.dto.request.AuditFilter;
-import dasein.sem1pks.dto.response.AuditEvent;
-import dasein.sem1pks.dto.response.Page;
+import dasein.sem1pks.dto.request.audit.AuditFilter;
+import dasein.sem1pks.dto.response.audit.AuditEvent;
+import dasein.sem1pks.dto.response.common.Page;
 import dasein.sem1pks.repository.AuditRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;

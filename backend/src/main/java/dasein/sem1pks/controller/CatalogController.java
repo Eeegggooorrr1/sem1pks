@@ -1,16 +1,16 @@
 package dasein.sem1pks.controller;
 
 import dasein.sem1pks.config.CurrentUser;
-import dasein.sem1pks.dto.request.BulkRequest;
-import dasein.sem1pks.dto.request.ListingFilter;
-import dasein.sem1pks.dto.request.ListingInput;
-import dasein.sem1pks.dto.request.NoteInput;
-import dasein.sem1pks.dto.request.UpdateListing;
-import dasein.sem1pks.dto.request.Version;
-import dasein.sem1pks.dto.response.BulkResult;
-import dasein.sem1pks.dto.response.ListingView;
-import dasein.sem1pks.dto.response.NoteView;
-import dasein.sem1pks.dto.response.Page;
+import dasein.sem1pks.dto.request.bulk.BulkRequest;
+import dasein.sem1pks.dto.request.listing.ListingFilter;
+import dasein.sem1pks.dto.request.listing.ListingInput;
+import dasein.sem1pks.dto.request.listing.UpdateListing;
+import dasein.sem1pks.dto.request.listing.Version;
+import dasein.sem1pks.dto.request.note.NoteInput;
+import dasein.sem1pks.dto.response.bulk.BulkResult;
+import dasein.sem1pks.dto.response.common.Page;
+import dasein.sem1pks.dto.response.listing.ListingView;
+import dasein.sem1pks.dto.response.note.NoteView;
 import dasein.sem1pks.service.BulkService;
 import dasein.sem1pks.service.CatalogService;
 import dasein.sem1pks.service.NoteService;

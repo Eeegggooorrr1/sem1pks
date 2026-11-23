@@ -1,8 +1,8 @@
 package dasein.sem1pks.repository;
 
-import dasein.sem1pks.dto.request.AuditFilter;
-import dasein.sem1pks.dto.response.AuditEvent;
-import dasein.sem1pks.dto.response.Page;
+import dasein.sem1pks.dto.request.audit.AuditFilter;
+import dasein.sem1pks.dto.response.audit.AuditEvent;
+import dasein.sem1pks.dto.response.common.Page;
 
 public interface AuditRepository {
 

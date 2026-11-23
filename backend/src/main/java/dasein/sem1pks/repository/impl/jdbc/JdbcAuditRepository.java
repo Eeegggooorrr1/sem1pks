@@ -1,9 +1,9 @@
 package dasein.sem1pks.repository.impl.jdbc;
 
-import dasein.sem1pks.dto.request.AuditFilter.Direction;
-import dasein.sem1pks.dto.request.AuditFilter;
-import dasein.sem1pks.dto.response.AuditEvent;
-import dasein.sem1pks.dto.response.Page;
+import dasein.sem1pks.dto.request.audit.AuditFilter.Direction;
+import dasein.sem1pks.dto.request.audit.AuditFilter;
+import dasein.sem1pks.dto.response.audit.AuditEvent;
+import dasein.sem1pks.dto.response.common.Page;
 import dasein.sem1pks.repository.AuditRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

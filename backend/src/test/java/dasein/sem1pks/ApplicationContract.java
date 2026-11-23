@@ -3,7 +3,9 @@ package dasein.sem1pks;
 import dasein.sem1pks.bootstrap.BootstrapProperties;
 import dasein.sem1pks.bootstrap.BootstrapService;
 import dasein.sem1pks.domain.*;
-import dasein.sem1pks.dto.request.*;
+import dasein.sem1pks.dto.request.admin.AdminUserRequest;
+import dasein.sem1pks.dto.request.listing.ListingSortBy;
+import dasein.sem1pks.dto.request.order.OrderDirection;
 import dasein.sem1pks.exception.conflict.OrderCreateConflictException;
 import dasein.sem1pks.exception.conflict.OrderStateConflictException;
 import dasein.sem1pks.exception.forbidden.AccountBlockedException;
@@ -107,6 +109,9 @@ abstract class ApplicationContract {
         var created = userAdmin.create(admin.getId(),
                 new AdminUserRequest("Reader", "reader@example.com", UserRole.USER, true), "Password-123");
         var session = accounts.login(created.email(), "Password-123");
+        mvc.perform(get("/api/admin/users")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/admin/users").header("Authorization", "Bearer " + session.accessToken()))
+                .andExpect(status().isForbidden());
         userAdmin.update(admin.getId(), created.id(),
                 new AdminUserRequest("Reader", "reader@example.com", UserRole.USER, false));
         assertThat(jdbc.queryForObject("SELECT revoked_at IS NOT NULL FROM refresh_sessions WHERE user_id=?",

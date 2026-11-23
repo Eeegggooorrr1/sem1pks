@@ -1,7 +1,7 @@
 package dasein.sem1pks.service;
 
-import dasein.sem1pks.dto.request.CategoryInput;
-import dasein.sem1pks.dto.response.CategoryView;
+import dasein.sem1pks.dto.request.category.CategoryInput;
+import dasein.sem1pks.dto.response.category.CategoryView;
 import dasein.sem1pks.exception.badrequest.InvalidCatalogDataException;
 import dasein.sem1pks.exception.notfound.CatalogEntryNotFoundException;
 import dasein.sem1pks.repository.CategoryRepository;

@@ -1,6 +1,6 @@
 package dasein.sem1pks.repository.impl.jdbc;
 
-import dasein.sem1pks.dto.response.CategoryView;
+import dasein.sem1pks.dto.response.category.CategoryView;
 import dasein.sem1pks.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

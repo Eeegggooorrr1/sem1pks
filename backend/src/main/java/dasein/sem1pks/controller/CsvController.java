@@ -1,10 +1,10 @@
 package dasein.sem1pks.controller;
 
 import dasein.sem1pks.config.CurrentUser;
-import dasein.sem1pks.dto.request.ImportMode;
-import dasein.sem1pks.dto.request.ListingFilter;
-import dasein.sem1pks.dto.response.ImportPreview;
-import dasein.sem1pks.dto.response.ImportResult;
+import dasein.sem1pks.dto.request.csv.ImportMode;
+import dasein.sem1pks.dto.request.listing.ListingFilter;
+import dasein.sem1pks.dto.response.csv.ImportPreview;
+import dasein.sem1pks.dto.response.csv.ImportResult;
 import dasein.sem1pks.service.CatalogService;
 import dasein.sem1pks.service.CsvService;
 import jakarta.validation.Valid;

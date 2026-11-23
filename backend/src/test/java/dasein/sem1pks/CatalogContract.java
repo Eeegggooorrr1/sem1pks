@@ -1,16 +1,16 @@
 package dasein.sem1pks;
 
-import dasein.sem1pks.dto.request.BulkAction;
-import dasein.sem1pks.dto.request.BulkItem;
-import dasein.sem1pks.dto.request.BulkRequest;
-import dasein.sem1pks.dto.request.CategoryInput;
-import dasein.sem1pks.dto.request.ImportMode;
-import dasein.sem1pks.dto.request.ListingFilter;
-import dasein.sem1pks.dto.request.ListingInput;
-import dasein.sem1pks.dto.request.NoteInput;
-import dasein.sem1pks.dto.request.UpdateListing;
-import dasein.sem1pks.dto.response.Group;
-import dasein.sem1pks.dto.response.ListingView;
+import dasein.sem1pks.dto.request.bulk.BulkAction;
+import dasein.sem1pks.dto.request.bulk.BulkItem;
+import dasein.sem1pks.dto.request.bulk.BulkRequest;
+import dasein.sem1pks.dto.request.category.CategoryInput;
+import dasein.sem1pks.dto.request.csv.ImportMode;
+import dasein.sem1pks.dto.request.listing.ListingFilter;
+import dasein.sem1pks.dto.request.listing.ListingInput;
+import dasein.sem1pks.dto.request.listing.UpdateListing;
+import dasein.sem1pks.dto.request.note.NoteInput;
+import dasein.sem1pks.dto.response.analytics.Group;
+import dasein.sem1pks.dto.response.listing.ListingView;
 import dasein.sem1pks.exception.badrequest.InvalidCatalogDataException;
 import dasein.sem1pks.exception.conflict.CatalogConflictException;
 import dasein.sem1pks.repository.CatalogRepository;
@@ -183,6 +183,10 @@ abstract class CatalogContract extends ApplicationContract {
         String code = "C" + UUID.randomUUID().toString().substring(0, 8).replace("-", "").toUpperCase();
         var data = new CategoryInput(code, "Категория", true);
         mvc.perform(post("/api/categories")
+                            .contentType("application/json")
+                            .content(body(data)))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/categories")
                             .header("Authorization", "Bearer " + token(owner))
                             .contentType("application/json")
                             .content(body(data)))
@@ -196,6 +200,11 @@ abstract class CatalogContract extends ApplicationContract {
                                   .getResponse()
                                   .getContentAsString();
         UUID id = UUID.fromString(json.readTree(response).get("id").asString());
+        mvc.perform(put("/api/categories/" + id)
+                            .header("Authorization", "Bearer " + token(owner))
+                            .contentType("application/json")
+                            .content(body(data)))
+                .andExpect(status().isForbidden());
         var listing = catalog.create(owner.getId(),
                 new ListingInput("CUSTOM", "Custom", "Text", BigDecimal.TEN, ListingStatus.ACTIVE, id, false,
                         Set.of()));

@@ -1,9 +1,9 @@
 package dasein.sem1pks.controller;
 
 import dasein.sem1pks.config.CurrentUser;
-import dasein.sem1pks.dto.request.OrderCreateRequest;
-import dasein.sem1pks.dto.request.OrderDirection;
-import dasein.sem1pks.dto.response.OrderResponse;
+import dasein.sem1pks.dto.request.order.OrderCreateRequest;
+import dasein.sem1pks.dto.request.order.OrderDirection;
+import dasein.sem1pks.dto.response.order.OrderResponse;
 import dasein.sem1pks.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

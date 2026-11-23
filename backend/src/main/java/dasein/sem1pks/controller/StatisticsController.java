@@ -1,6 +1,6 @@
 package dasein.sem1pks.controller;
 
-import dasein.sem1pks.dto.response.StatisticsResponse;
+import dasein.sem1pks.dto.response.analytics.StatisticsResponse;
 import dasein.sem1pks.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

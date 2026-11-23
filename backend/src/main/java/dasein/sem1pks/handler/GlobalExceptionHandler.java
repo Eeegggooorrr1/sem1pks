@@ -1,6 +1,6 @@
 package dasein.sem1pks.handler;
 
-import dasein.sem1pks.dto.response.ErrorResponse;
+import dasein.sem1pks.dto.response.common.ErrorResponse;
 import dasein.sem1pks.exception.DomainException;
 import dasein.sem1pks.exception.notfound.NotFoundException;
 import jakarta.validation.ConstraintViolationException;

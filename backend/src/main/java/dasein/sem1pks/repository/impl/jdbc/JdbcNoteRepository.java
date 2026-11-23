@@ -1,6 +1,6 @@
 package dasein.sem1pks.repository.impl.jdbc;
 
-import dasein.sem1pks.dto.response.NoteView;
+import dasein.sem1pks.dto.response.note.NoteView;
 import dasein.sem1pks.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

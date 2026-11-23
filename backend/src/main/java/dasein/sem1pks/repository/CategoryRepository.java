@@ -1,6 +1,6 @@
 package dasein.sem1pks.repository;
 
-import dasein.sem1pks.dto.response.CategoryView;
+import dasein.sem1pks.dto.response.category.CategoryView;
 
 import java.util.List;
 import java.util.Optional;
